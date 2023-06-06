@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "374721041855",
+    "project_id": "stopshop-36010",
+    "storage_bucket": "stopshop-36010.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374721041855:android:fc0e88ce5fcf608c4efd0a",
+        "android_client_info": {
+          "package_name": "com.newstopshop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "374721041855-luj7c0bcdh39gv5rvfhho9d7ajm2bo66.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1RjtiySWm8h-YSVqZYwuWeBsQGwMPX_Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "374721041855-luj7c0bcdh39gv5rvfhho9d7ajm2bo66.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
