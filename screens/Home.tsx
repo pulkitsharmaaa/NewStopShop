@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,11 +9,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Header from '../components/header';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../components/AppNavigator';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../components/AppNavigator';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useDispatch } from 'react-redux';
-import { addProducts } from '../redux/slices/ProductSlice';
+import {useDispatch} from 'react-redux';
+import {addProducts} from '../redux/slices/ProductSlice';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
@@ -25,9 +25,9 @@ interface Product {
   title: string;
 }
 
-const Home = ({ navigation }: Props)=> {
+const Home = ({navigation}: Props) => {
   const [products, setProducts] = useState<Product[]>([]);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getProducts();
@@ -35,9 +35,14 @@ const Home = ({ navigation }: Props)=> {
 
   const getProducts = (): void => {
     fetch('https://fakestoreapi.com/products')
-      .then((res) => res.json())
-      .then((json) => setProducts(json));
-      dispatch(addProducts(JSON));
+      .then(res => res.json())
+      .then(json => {
+        setProducts(json);
+        dispatch(addProducts(json));
+      })
+      .catch(error => {
+        console.error('Error fetching products:', error);
+      });
   };
 
   return (
@@ -50,9 +55,7 @@ const Home = ({ navigation }: Props)=> {
             activeOpacity={1}
             onPress={() => navigation.navigate('Details', {data: item})}
             style={styles.productItems}>
-            <Image
-              source={{uri: item.image}}
-              style={styles.productImage}></Image>
+            <Image source={{uri: item.image}} style={styles.productImage} />
             <View style={styles.info}>
               <Text style={styles.productName}>
                 {item.title.length > 30
@@ -71,7 +74,7 @@ const Home = ({ navigation }: Props)=> {
             </TouchableOpacity>
           </TouchableOpacity>
         )}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={item => item.id.toString()}
       />
     </View>
   );
@@ -103,8 +106,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
   },
-  productDesc:{
-    marginRight:20
+  productDesc: {
+    marginRight: 20,
   },
   productPrice: {
     color: 'green',

@@ -56,12 +56,12 @@ const Login = ({navigation}: Props) => {
           <View style={styles.signupcontainer}>
             <Text style={styles.buttonTextStyle}>
               Don't have a account?{' '}
-                <Text
-                  style={styles.clickhere}
-                  onPress={() => navigation.navigate('Signup')}>
-                  {' '}
-                  click here{' '}
-                </Text>{' '}
+              <Text
+                style={styles.clickhere}
+                onPress={() => navigation.navigate('Signup')}>
+                {' '}
+                click here{' '}
+              </Text>{' '}
               to SignUp.
             </Text>
           </View>

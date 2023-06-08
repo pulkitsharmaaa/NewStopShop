@@ -35,10 +35,20 @@ const BottomTabNavigator = () => {
           headerShown: false,
           tabBarIcon: ({color, size}) => (
             <MaterialCommunityIcons
-              name="home-circle"
+              name="home-circle"  
               color={color}
               size={size}
             />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={Search}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({color}) => (
+            <Ionicons name="search" color={color} size={22} />
           ),
         }}
       />
@@ -52,15 +62,6 @@ const BottomTabNavigator = () => {
           ),
         }}
       />
-      <Tab.Screen
-        name="Search"
-        component={Search}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({color}) => (
-            <Ionicons name="search" color={color} size={22} />
-          ),
-        }}/>
     </Tab.Navigator>
   );
 };
