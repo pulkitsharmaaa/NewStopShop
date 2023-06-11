@@ -1,16 +1,28 @@
-import React from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import React, { useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import Header from '../components/header';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../components/AppNavigator';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../components/AppNavigator';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
+import { useDispatch } from 'react-redux';
+import { addItemToWishList } from '../redux/slices/WishlistSlice';
+import { addItemToCart } from '../redux/slices/CartSlice';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Details'>;
 
-const ProductDetail = ({route}: Props) => {
-  const {data} = route.params as {data: any};
+const ProductDetail = ({ route }: Props) => {
+  const { data } = route.params as { data: any };
+  const dispatch = useDispatch();
+  const [buttonColor, setButtonColor] = useState('#fff');
+
+  const handleButtonPressIn = () => {
+    setButtonColor('#ff6b6b');
+  };
+
+  // const handleButtonPressOut = () => {
+  //   setButtonColor('#fff');
+  // };
 
   return (
     <ScrollView style={styles.main}>
@@ -23,11 +35,26 @@ const ProductDetail = ({route}: Props) => {
         <Text style={[styles.ProductPrice, {color: 'black'}]}>Price: </Text>
         <Text style={styles.ProductPrice}>{'$' + data.price}</Text>
       </View>
-      <TouchableOpacity style={styles.btn} activeOpacity={1}>
+      <TouchableOpacity
+        style={styles.btn}
+        activeOpacity={1}
+        onPress={() => {
+          dispatch(addItemToCart(route.params.data));
+        }}>
         <Text style={styles.btnText}>Add To Cart</Text>
       </TouchableOpacity>
-      <Pressable style={styles.wishlistBtn}>
-        <AntDesign name="heart" size={24} style={styles.wishlistIcon} />
+      <Pressable
+        onPressIn={handleButtonPressIn}
+        // onPressOut={handleButtonPressOut}
+        style={styles.wishlistBtn}
+        onPress={() => {
+          dispatch(addItemToWishList(route.params.data));
+        }}>
+        <AntDesign
+          name="heart"
+          size={24}
+          style={[styles.wishlistIcon, {color: buttonColor}]}
+        />
       </Pressable>
     </ScrollView>
   );
@@ -80,7 +107,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    padding:0
+    padding: 0
   },
   btnText: {
     fontSize: 20,

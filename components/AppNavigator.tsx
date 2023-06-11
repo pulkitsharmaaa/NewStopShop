@@ -6,6 +6,7 @@ import Login from '../screens/login';
 import Signup from '../screens/Signup';
 import BottomTabNavigator from '../components/bottomNavigator';
 import ProductDetail from '../screens/productDetail';
+import Cart from '../screens/cart';
 
 
 interface Product {
@@ -28,6 +29,7 @@ export type RootStackParamList = {
   Navigator: undefined;
   Header: undefined;
   Search:undefined;
+  Cart: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -59,6 +61,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Details"
           component={ProductDetail}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Cart"
+          component={Cart}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

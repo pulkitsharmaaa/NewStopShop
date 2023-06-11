@@ -201,16 +201,166 @@
 //   },
 // });
 
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {FlatList} from 'react-native-gesture-handler';
+import {useDispatch, useSelector} from 'react-redux';
+import {Dimensions} from 'react-native';
+import Header from '../components/header';
+import { addItemToCart, reduceItemFromCart, removeItemFromCart } from '../redux/slices/CartSlice';
 
-import React from 'react';
-import {View, Text} from 'react-native';
+const Cart = ({navigation}) => {
+  const items = useSelector(state => state.cart);
+  const [cartItem, setCartItem] = useState([]);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    setCartItem(items.data);
+  }, [items]);
+  console.log(cartItem);
 
-const Wishlist = () =>{
-  return(
-    <View>
-      <Text>Wishlist</Text>
+  return (
+    <View style={styles.main}>
+      <Header />
+      <FlatList
+        data={cartItem}
+        renderItem={({item, index}) => {
+          return (
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => navigation.navigate('Details', {data: item})}
+              style={styles.productItems}>
+              <Image source={{uri: item.image}} style={styles.productImage} />
+              <View style={styles.info}>
+                <Text style={styles.productName}>
+                  {item.title.length > 30
+                    ? item.title.substring(0, 25) + '...'
+                    : item.title}
+                </Text>
+                <Text style={styles.productDesc}>
+                  {item.description.length > 30
+                    ? item.description.substring(0, 40) + '...'
+                    : item.description}
+                </Text>
+                <View style={styles.quantityStyle}>
+                  <View>
+                    <Text style={styles.productPrice}>{'$' + item.price}</Text>
+                  </View>
+                  <View style={styles.qtyBtnAlign}>
+                    <TouchableOpacity style={styles.btn} onPress={()=>{
+                      if(item.qty > 1){
+                        dispatch(reduceItemFromCart(item));
+                      }
+                      else{
+                        dispatch(removeItemFromCart(index));
+                      }
+                    }}>
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          fontWeight: '700',
+                          marginTop: -3,
+                        }}>
+                        -
+                      </Text>
+                    </TouchableOpacity>
+                    <Text style={styles.btnText}>{item.qty}</Text>
+                    <TouchableOpacity style={styles.btn} onPress={()=>dispatch(addItemToCart(item))}>
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          fontWeight: '700',
+                          marginTop: -3,
+                        }}>
+                        +
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </TouchableOpacity>
+          );
+        }}
+      />
     </View>
-  )
-}
+  );
+};
 
-export default Wishlist
+export default Cart;
+
+const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  productItems: {
+    width: Dimensions.get('window').width,
+    height: 107,
+    backgroundColor: 'white',
+    marginTop: 10,
+    flexDirection: 'row',
+    padding: 13,
+    alignItems: 'center',
+  },
+  productImage: {
+    height: 80,
+    width: 80,
+  },
+  info: {
+    flexDirection: 'column',
+    marginLeft: 20,
+    width: '80%',
+  },
+  productName: {
+    color: 'black',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  productDesc: {
+    marginRight: 20,
+  },
+  productPrice: {
+    color: 'green',
+    fontWeight: '700',
+    marginTop: 5,
+  },
+  addToCart: {
+    position: 'absolute',
+    // height: 28,
+    width: 28,
+    borderRadius: 20,
+    bottom: 12,
+    right: 12,
+    backgroundColor: '#C8CECB',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addToCartText: {
+    color: 'black',
+  },
+  quantityStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  btn: {
+    padding: 5,
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    borderWidth: 0.5,
+  },
+  btnText: {
+    marginLeft: 10,
+    marginRight: 10,
+    fontSize: 18,
+  },
+  qtyBtnAlign: {
+    flexDirection: 'row',
+    position:'absolute',
+    width: '50%',
+    // backgroundColor: 'red',
+    alignItems: 'center',
+    right:0,
+  },
+});

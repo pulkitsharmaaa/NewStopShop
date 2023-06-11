@@ -38,6 +38,9 @@ const Home = ({navigation}: Props) => {
       .then(res => res.json())
       .then(json => {
         setProducts(json);
+        json.map(item =>{
+          item.qty = 1;
+        })
         dispatch(addProducts(json));
       })
       .catch(error => {
