@@ -213,7 +213,6 @@ import {
   Dimensions,
 } from 'react-native';
 import {useSelector} from 'react-redux';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const Wishlist = ({navigation}) => {
   const items = useSelector(state => state.wishlist);

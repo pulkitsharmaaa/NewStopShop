@@ -10,6 +10,8 @@ import Cart from '../screens/cart';
 
 
 interface Product {
+  rating: any;
+  category: any;
   price: string;
   description: string;
   image: string;

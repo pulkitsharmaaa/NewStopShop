@@ -1,20 +1,35 @@
-import React, { useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import React, {useState} from 'react';
+import {Alert, Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import Header from '../components/header';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../components/AppNavigator';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../components/AppNavigator';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useDispatch } from 'react-redux';
-import { addItemToWishList } from '../redux/slices/WishlistSlice';
-import { addItemToCart } from '../redux/slices/CartSlice';
-
+import {useDispatch} from 'react-redux';
+import {addItemToWishList} from '../redux/slices/WishlistSlice';
+import {addItemToCart} from '../redux/slices/CartSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AskModal from '../components/AskModal';
 type Props = NativeStackScreenProps<RootStackParamList, 'Details'>;
 
-const ProductDetail = ({ route }: Props) => {
-  const { data } = route.params as { data: any };
+const ProductDetail = ({route}: Props) => {
+  const {data} = route.params as {data: any};
   const dispatch = useDispatch();
   const [buttonColor, setButtonColor] = useState('#fff');
+  const [modalVisible, setModalVisible] = useState(false)
+
+  const checkUserStatus = async () => {
+    let isUserLoggedIn = false;
+    const status = await AsyncStorage.getItem('IS_USER_LOGGED_IN');
+    if (status == null) {
+      isUserLoggedIn = false;
+      // Alert.alert('Please Log In');
+    } else {
+      isUserLoggedIn = true;
+      // dispatch(addItemToCart(route.params.data));
+    }
+    return isUserLoggedIn;
+  };
 
   const handleButtonPressIn = () => {
     setButtonColor('#ff6b6b');
@@ -40,6 +55,12 @@ const ProductDetail = ({ route }: Props) => {
         activeOpacity={1}
         onPress={() => {
           dispatch(addItemToCart(route.params.data));
+
+          // if (!checkUserStatus()) {
+          //   dispatch(addItemToCart(route.params.data));
+          // } else {
+          //   setModalVisible(true);
+          // }
         }}>
         <Text style={styles.btnText}>Add To Cart</Text>
       </TouchableOpacity>
@@ -56,6 +77,18 @@ const ProductDetail = ({ route }: Props) => {
           style={[styles.wishlistIcon, {color: buttonColor}]}
         />
       </Pressable>
+      <AskModal
+        modalVisible={modalVisible}
+        onClose={() => {
+          setModalVisible(false);
+        }}
+        onClickLogin={() => {
+          setModalVisible(false);
+        }}
+        onClickSignup={() => {
+          setModalVisible(false);
+        }}
+      />
     </ScrollView>
   );
 };
@@ -99,7 +132,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     height: 40,
-    width: "87%",
+    width: '87%',
     alignSelf: 'center',
     backgroundColor: '#F2a944',
     borderRadius: 20,
@@ -107,7 +140,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 0
+    padding: 0,
   },
   btnText: {
     fontSize: 20,

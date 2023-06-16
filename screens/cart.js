@@ -208,6 +208,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Dimensions} from 'react-native';
 import Header from '../components/header';
 import { addItemToCart, reduceItemFromCart, removeItemFromCart } from '../redux/slices/CartSlice';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
 
 const Cart = ({navigation}) => {
   const items = useSelector(state => state.cart);
@@ -216,7 +218,7 @@ const Cart = ({navigation}) => {
   useEffect(() => {
     setCartItem(items.data);
   }, [items]);
-  console.log(cartItem);
+  // console.log(cartItem);
 
   return (
     <View style={styles.main}>
@@ -229,6 +231,9 @@ const Cart = ({navigation}) => {
               activeOpacity={1}
               onPress={() => navigation.navigate('Details', {data: item})}
               style={styles.productItems}>
+              <TouchableOpacity style={styles.deleteBtn} onPress={()=> dispatch(removeItemFromCart)}>
+                <AntDesign name="delete" size={20} color={'red'} />
+              </TouchableOpacity>
               <Image source={{uri: item.image}} style={styles.productImage} />
               <View style={styles.info}>
                 <Text style={styles.productName}>
@@ -243,17 +248,20 @@ const Cart = ({navigation}) => {
                 </Text>
                 <View style={styles.quantityStyle}>
                   <View>
-                    <Text style={styles.productPrice}>{'$' + item.price}</Text>
+                    <Text style={styles.productPrice}>
+                      {'$' + item.price * item.qty}
+                    </Text>
                   </View>
                   <View style={styles.qtyBtnAlign}>
-                    <TouchableOpacity style={styles.btn} onPress={()=>{
-                      if(item.qty > 1){
-                        dispatch(reduceItemFromCart(item));
-                      }
-                      else{
-                        dispatch(removeItemFromCart(index));
-                      }
-                    }}>
+                    <TouchableOpacity
+                      style={styles.btn}
+                      onPress={() => {
+                        if (item.qty > 1) {
+                          dispatch(reduceItemFromCart(item));
+                        } else {
+                          dispatch(removeItemFromCart(index));
+                        }
+                      }}>
                       <Text
                         style={{
                           fontSize: 18,
@@ -264,7 +272,9 @@ const Cart = ({navigation}) => {
                       </Text>
                     </TouchableOpacity>
                     <Text style={styles.btnText}>{item.qty}</Text>
-                    <TouchableOpacity style={styles.btn} onPress={()=>dispatch(addItemToCart(item))}>
+                    <TouchableOpacity
+                      style={styles.btn}
+                      onPress={() => dispatch(addItemToCart(item))}>
                       <Text
                         style={{
                           fontSize: 18,
@@ -317,6 +327,7 @@ const styles = StyleSheet.create({
   },
   productDesc: {
     marginRight: 20,
+    marginTop: 5,
   },
   productPrice: {
     color: 'green',
@@ -357,10 +368,15 @@ const styles = StyleSheet.create({
   },
   qtyBtnAlign: {
     flexDirection: 'row',
-    position:'absolute',
+    position: 'absolute',
     width: '50%',
     // backgroundColor: 'red',
     alignItems: 'center',
-    right:0,
+    right: 0,
   },
+  deleteBtn:{
+    position:'absolute',
+    top:10,
+    right:5,
+  }
 });

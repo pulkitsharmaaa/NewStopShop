@@ -8,6 +8,7 @@ import Home from '../screens/Home';
 import Account from '../screens/account';
 import { RootStackParamList } from '../components/AppNavigator';
 import Search from '../screens/search';
+import User from '../screens/user';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -54,7 +55,7 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="Account"
-        component={Account}
+        component={User}
         options={{
           headerShown: false,
           tabBarIcon: ({color}) => (

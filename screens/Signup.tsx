@@ -10,9 +10,10 @@ import {
   Image,
   Alert,
 } from 'react-native';
-
 import {RootStackParamList} from '../components/AppNavigator';
+import auth from '@react-native-firebase/auth';
 type Props = NativeStackScreenProps<RootStackParamList, 'Signup'>;
+
 
 const SignupPage = ({navigation}: Props) => {
   const [username, setUsername] = useState('');
@@ -21,6 +22,28 @@ const SignupPage = ({navigation}: Props) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [selectedRadio, setSelectedRadio] = useState(0);
 
+  const createUser = () => {
+auth()
+  .createUserWithEmailAndPassword(
+    email,
+    password
+  )
+  .then(() => {
+    Alert.alert('User Account Created');
+  })
+  .catch(error => {
+    if (error.code === 'auth/email-already-in-use') {
+      Alert.alert('That email address is already in use!');
+    }
+
+    if (error.code === 'auth/invalid-email') {
+      console.log('That email address is invalid!');
+    }
+
+    console.error(error);
+  });
+  };
+
   const handleSignup = () => {
     if (!username || !email || !password || selectedRadio === 0) {
       setErrorMessage('Please fill in all fields');
@@ -28,7 +51,7 @@ const SignupPage = ({navigation}: Props) => {
       setErrorMessage('Please enter a valid email address');
     } else {
       console.log('Signup:', username, email, password);
-      Alert.alert('Signup Successful.');
+      createUser();
       navigation.navigate('Login');
     }
   };
@@ -95,7 +118,7 @@ const SignupPage = ({navigation}: Props) => {
         ) : null}
         <TouchableOpacity
           style={styles.loginButtonStyle}
-          onPress={handleSignup}>
+          onPress={()=>{ handleSignup()}}>
           <Text style={{color: 'white'}}>Signup</Text>
         </TouchableOpacity>
         <View style={styles.logincontainer}>

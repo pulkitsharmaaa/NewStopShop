@@ -11,19 +11,26 @@ import {
   Image,
 } from 'react-native';
 import {RootStackParamList} from '../components/AppNavigator';
+import auth from '@react-native-firebase/auth';
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 const Login = ({navigation}: Props) => {
-  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const loginUser = () => {
+    auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        console.log('User logged in');
+        navigation.navigate('BottomNavigator');
+      })
+      .catch(error => {
+        console.log(error);
+      Alert.alert('invalid credentials');
 
-  const handleLogin = () => {
-    if (username === 'admin' && password === 'admin') {
-      navigation.navigate('BottomNavigator');
-    } else {
-      Alert.alert('Invalid credentials');
-    }
+      });
   };
+
 
   return (
     <ImageBackground
@@ -38,8 +45,8 @@ const Login = ({navigation}: Props) => {
           <TextInput
             style={styles.inputStyle}
             placeholder="Username"
-            value={username}
-            onChangeText={setUsername}
+            value={email}
+            onChangeText={setEmail}
           />
           <TextInput
             style={styles.inputStyle}
@@ -48,9 +55,7 @@ const Login = ({navigation}: Props) => {
             value={password}
             onChangeText={setPassword}
           />
-          <TouchableOpacity
-            style={styles.loginButtonStyle}
-            onPress={handleLogin}>
+          <TouchableOpacity style={styles.loginButtonStyle} onPress={loginUser}>
             <Text style={{color: 'white'}}>Login</Text>
           </TouchableOpacity>
           <View style={styles.signupcontainer}>
