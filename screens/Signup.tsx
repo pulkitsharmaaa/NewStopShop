@@ -26,7 +26,7 @@ const SignupPage = ({navigation}: Props) => {
 auth()
   .createUserWithEmailAndPassword(
     email,
-    password
+    password,
   )
   .then(() => {
     Alert.alert('User Account Created');

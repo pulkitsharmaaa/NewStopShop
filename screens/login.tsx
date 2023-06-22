@@ -44,7 +44,7 @@ const Login = ({navigation}: Props) => {
         <View style={{alignItems: 'center', justifyContent: 'center'}}>
           <TextInput
             style={styles.inputStyle}
-            placeholder="Username"
+            placeholder="Email"
             value={email}
             onChangeText={setEmail}
           />

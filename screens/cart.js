@@ -209,6 +209,7 @@ import {Dimensions} from 'react-native';
 import Header from '../components/header';
 import { addItemToCart, reduceItemFromCart, removeItemFromCart } from '../redux/slices/CartSlice';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import CheckoutLayout from '../components/CheckoutLayout';
 
 
 const Cart = ({navigation}) => {
@@ -219,6 +220,13 @@ const Cart = ({navigation}) => {
     setCartItem(items.data);
   }, [items]);
   // console.log(cartItem);
+  const getTotal = () =>{
+    let total=0;
+    cartItem.map(item=>{
+      total = total + item.price * item.qty;
+    });
+    return total
+  }
 
   return (
     <View style={styles.main}>
@@ -231,9 +239,6 @@ const Cart = ({navigation}) => {
               activeOpacity={1}
               onPress={() => navigation.navigate('Details', {data: item})}
               style={styles.productItems}>
-              <TouchableOpacity style={styles.deleteBtn} onPress={()=> dispatch(removeItemFromCart)}>
-                <AntDesign name="delete" size={20} color={'red'} />
-              </TouchableOpacity>
               <Image source={{uri: item.image}} style={styles.productImage} />
               <View style={styles.info}>
                 <Text style={styles.productName}>
@@ -262,14 +267,21 @@ const Cart = ({navigation}) => {
                           dispatch(removeItemFromCart(index));
                         }
                       }}>
-                      <Text
-                        style={{
-                          fontSize: 18,
-                          fontWeight: '700',
-                          marginTop: -3,
-                        }}>
-                        -
-                      </Text>
+                      {item.qty > 1 ? (
+                        <Text
+                          style={{
+                            fontSize: 18,
+                            fontWeight: '700',
+                            marginTop: -3,
+                          }}>
+                          -
+                        </Text>
+                      ) : (
+                        <Image
+                          source={require('../src/images/delete.png')}
+                          style={styles.minusImage}
+                        />
+                      )}
                     </TouchableOpacity>
                     <Text style={styles.btnText}>{item.qty}</Text>
                     <TouchableOpacity
@@ -287,10 +299,27 @@ const Cart = ({navigation}) => {
                   </View>
                 </View>
               </View>
+              {/* <TouchableOpacity
+                style={styles.deleteBtn}
+                onPress={() => dispatch(removeItemFromCart(index))}>
+                <AntDesign name="delete" size={20} color={'red'} />
+              </TouchableOpacity> */}
             </TouchableOpacity>
           );
         }}
       />
+      {cartItem.length < 1 && (
+        <View style={styles.noItem}>
+          <Image
+            source={require('../src/images/3298067.jpg')}
+            style={{width: 300, height: 300}}
+          />
+          <Text style={styles.textStyle}>No Items in cart</Text>
+        </View>
+      )}
+      {cartItem.length > 0 && (
+        <CheckoutLayout items={cartItem.length} total={getTotal()} />
+      )}
     </View>
   );
 };
@@ -374,9 +403,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     right: 0,
   },
-  deleteBtn:{
-    position:'absolute',
-    top:10,
-    right:5,
+  deleteBtn: {
+    position: 'absolute',
+    top: 10,
+    right: 5,
+  },
+  noItem: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: -20,
+  },
+  textStyle: {
+    fontSize: 20,
+    color: 'black',
+    top: 0,
+    marginTop:-5
+  },
+  minusImage:{
+    height:19,
+    width:20,
+    tintColor:'red'
   }
 });
